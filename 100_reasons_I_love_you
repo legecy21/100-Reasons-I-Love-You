@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>100 Reasons I Love You Jar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+            --ease-in-out-sine: cubic-bezier(0.45, 0.05, 0.55, 0.95);
+        }
+
+        /* --- Base & Themes --- */
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            color: var(--text-color);
+            transition: background 0.8s var(--ease-in-out-sine);
+        }
+
+        .theme-pink {
+            --bg-start: #FFF1F2; /* Soft Pink */
+            --bg-end: #FFE4E6;
+            --jar-color: #F472B6;
+            --text-color: #831843;
+            --heart-color-1: rgba(251, 146, 175, 0.7);
+            --heart-color-2: rgba(253, 164, 175, 0.7);
+        }
+        
+        .theme-red {
+            --bg-start: #991B1B; /* Dark Red */
+            --bg-end: #7F1D1D;
+            --jar-color: #F87171;
+            --text-color: #FECDD3;
+            --heart-color-1: rgba(254, 205, 211, 0.7);
+            --heart-color-2: rgba(252, 165, 165, 0.7);
+        }
+
+        .theme-green {
+            --bg-start: #166534; /* Dark Green */
+            --bg-end: #14532D;
+            --jar-color: #34D399;
+            --text-color: #D1FAE5;
+            --heart-color-1: rgba(167, 243, 208, 0.7);
+            --heart-color-2: rgba(110, 231, 183, 0.7);
+        }
+
+        .theme-black {
+            --bg-start: #374151; /* Midnight & Gold */
+            --bg-end: #1F2937;
+            --jar-color: #FBBF24;
+            --text-color: #FDE68A;
+            --heart-color-1: rgba(252, 211, 77, 0.7);
+            --heart-color-2: rgba(251, 191, 36, 0.7);
+        }
+
+        /* --- Animations --- */
+        @keyframes float-up {
+            0% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-10vh) rotate(45deg); opacity: 0; }
+        }
+
+        @keyframes pop-in {
+            0% { transform: scale(0.8); opacity: 0; }
+            60% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        @keyframes jar-jiggle {
+            0%, 100% { transform: rotate(0) scale(1); }
+            25% { transform: rotate(-3deg) scale(1.02); }
+            75% { transform: rotate(3deg) scale(1.02); }
+        }
+
+        /* --- Heart Shape CSS (Corrected) --- */
+        .heart {
+            position: absolute;
+            background-color: var(--heart-color-1);
+            transform: rotate(45deg);
+            animation: float-up 10s infinite linear;
+            opacity: 0;
+        }
+
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: inherit;
+            border-radius: 50%;
+        }
+
+        .heart::before {
+            top: -50%;
+            left: 0;
+        }
+
+        .heart::after {
+            top: 0;
+            left: -50%;
+        }
+
+        /* --- Main Content --- */
+        .container {
+            text-align: center;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        .love-jar {
+            width: 200px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: transform 0.3s var(--ease-out-quart);
+            animation: pop-in 0.8s var(--ease-out-quart) forwards;
+            position: relative;
+        }
+        
+        .love-jar-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            fill: var(--jar-color);
+            stroke: rgba(255, 255, 255, 0.7);
+            stroke-width: 0.75;
+            filter: drop-shadow(0 10px 8px rgba(0,0,0,0.2));
+            transition: fill 0.8s var(--ease-in-out-sine);
+        }
+
+        .love-jar.clicked {
+            animation: jar-jiggle 0.4s var(--ease-in-out-sine);
+        }
+
+        .love-jar:hover {
+            transform: scale(1.05);
+        }
+
+        .love-jar-text {
+            color: white;
+            font-weight: 600;
+            z-index: 1;
+        }
+
+        .message-box {
+            margin-top: 3rem;
+            min-height: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .love-message {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 4vw, 2.25rem);
+            font-style: italic;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s var(--ease-out-quart), transform 0.8s var(--ease-out-quart);
+            color: var(--text-color);
+        }
+
+        .love-message.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .counter {
+            margin-top: 1rem;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        /* --- Mode Switch --- */
+        .mode-switch-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 8px;
+            border-radius: 12px;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .switch-label {
+            font-size: 0.8rem;
+            margin-bottom: 5px;
+            color: var(--text-color);
+            opacity: 0.8;
+            transition: color 0.8s var(--ease-in-out-sine);
+        }
+
+        .switch-wrapper {
+            display: flex;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .switch-option {
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: background-color 0.3s var(--ease-in-out-sine), color 0.8s var(--ease-in-out-sine), opacity 0.3s;
+            opacity: 0.7;
+        }
+
+        .switch-option.active {
+            background-color: var(--jar-color);
+            color: white;
+            font-weight: 600;
+            opacity: 1;
+        }
+
+    </style>
+</head>
+<body class="theme-pink">
+
+    <div class="mode-switch-container">
+        <span class="switch-label">Mode</span>
+        <div class="switch-wrapper" id="modeSwitch">
+            <div class="switch-option active" data-mode="random">Random</div>
+            <div class="switch-option" data-mode="ordered">Ordered</div>
+        </div>
+    </div>
+
+    <div id="heart-container"></div>
+
+    <div class="container">
+        <div class="love-jar" id="loveJar">
+            <svg viewBox="0 0 24 24" class="love-jar-svg">
+                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+            </svg>
+            <span class="love-jar-text" id="jarText">Tap Me</span>
+        </div>
+        <div class="message-box">
+            <p class="love-message" id="loveMessage"></p>
+            <p class="counter" id="counter"></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loveJar = document.getElementById('loveJar');
+            const loveMessage = document.getElementById('loveMessage');
+            const counterEl = document.getElementById('counter');
+            const jarText = document.getElementById('jarText');
+            const body = document.body;
+            const heartContainer = document.getElementById('heart-container');
+            const modeSwitch = document.getElementById('modeSwitch');
+            
+            let revealedIndices = new Set();
+            let currentMode = 'random'; // 'random' or 'ordered'
+
+
+            const reasons = [
+                "I love you because you are funny.",
+                "I love you because you are beautiful.",
+                "I love you because you are gorgeous.",
+                "I love you because you are thoughtful.",
+                "I love you because you are caring.",
+                "I love you because you are talented.",
+                "I love you because of your beautiful voice.",
+                "I love you because of your beautiful poems.",
+                "I love you because of your artistic side.",
+                "I love you because you are smart.",
+                "I love you because you are honest.",
+                "I love you because you are patient 🙄.",
+                "I love you because you are hardworking.",
+                "I love your smile.",
+                "I love your cheerful laugh.",
+                "I love your eyes.",
+                "I love how you make me feel.",
+                "I love you because enty 7yaty.",
+                "I love you because enty 3omry.",
+                "I love you because enty my maramero 😍.",
+                "I love you because enty qalby.",
+                "I love you because you are my moon.",
+                "I love you because enty ro7y.",
+                "I love you because you are my love.",
+                "I love you because you are my lil sweetest most gorgeous baby 😍.",
+                "I love you because you are my sweet lil princess.",
+                "I love you because of your morning voice (pop smoke😍).",
+                "I love your cooking skills (burned toast😍).",
+                "I love you because you are emo 😍.",
+                "I love that you are there for me whenever I need you.",
+                "I love you because you are my lil nerd 🤓👆.",
+                "You make me want to be a better person.",
+                "I love when you yap to me about anything.",
+                "I love when you send me vlogs.",
+                "I love when I see you happy.",
+                "You have the kindest and the sweetest heart.",
+                "I love the way your eyes light up when you smile.",
+                "You always know how to make me laugh, even on the worst days.",
+                "I love your unwavering support for my dreams.",
+                "I love listening to you talk about things you're passionate about.",
+                "You are the most thoughtful person I've ever met.",
+                "You always see the best in me.",
+                "I love the sound of your voice.",
+                "You make the ordinary moments feel extraordinary.",
+                "Your beautiful pastries, which I can't wait to taste.",
+                "I love that we can be completely silly together.",
+                "Your patience with me.",
+                "How you are able to handle me and forgive me when I make mistakes.",
+                "How you always try to fix things for us.",
+                "How you want to be a better person for me.",
+                "Your sense of humor is my favorite.",
+                "You always listen without judgment.",
+                "You make me feel safe and cherished.",
+                "Your encouragement helps me stay motivated so I can accomplish all our dreams.",
+                "I love our late-night conversations.",
+                "You have an incredible ability to comfort me.",
+                "I love the little things you do for me.",
+                "You are my best friend.",
+                "You are my girlfriend.",
+                "You are my wife.",
+                "You are om el 3yal.😍",
+                "You are om zafer.😍",
+                "You are om 4afeq.😍",
+                "Your creativity amazes me.",
+                "I love your ambition and drive.",
+                "You make me feel like the luckiest person in the world.",
+                "I love how we can talk about anything and everything.",
+                "I love your taste in music/movies/books.",
+                "You are my calm in the storm.",
+                "You are my sunshine on a cloudy day.",
+                "You always know what to say.",
+                "I love our shared memories and inside jokes. (amr diabetes 😭)",
+                "You make me feel loved for exactly who I am.",
+                "Your smile and laugh are infectious.",
+                "You are my favorite person to do nothing with.",
+                "You are my favorite person to do anything with.",
+                "I love how you're always up for an adventure with me.",
+                "You are fiercely loyal.",
+                "I love your confidence.",
+                "You make my world a better place just by being in it.",
+                "You are my star.",
+                "You are my favorite influencer 😍.",
+                "I love how you challenge me to grow and be better for you.",
+                "You are the most genuine person I know.",
+                "I love your sense of style.",
+                "You have the most beautiful soul.",
+                "I love that you are my partner in crime.",
+                "How I feel safe with you.",
+                "How I feel comfortable with you.",
+                "How I can say anything with you.",
+                "I love how you remember the small details.",
+                "You are my missing puzzle piece.",
+                "You are incredibly easy to talk to.",
+                "I love that you are my family and my everything.",
+                "Your belief in me is my greatest motivation.",
+                "I love how you always make time for us.",
+                "You are my favorite daydream.",
+                "I love your honesty.",
+                "You are the answer to a prayer I didn't know I had.",
+                "You are my everything.",
+                "I love how you inspire me to see the world differently.",
+                "Your ability to forgive is a beautiful thing.",
+                "I love the way you love me.",
+                "You are my favorite story.",
+                "I love that you are both my anchor and my sails.",
+                "Your laugh is my favorite sound.",
+                "You are the definition of a true partner.",
+                "I love how you're always learning and growing for me.",
+                "You make me feel whole.",
+                "You are my safe harbor.",
+                "I love how you love the things I love.",
+                "I love how we understand each other.",
+                "I love how we have a lot of things in common with each other.",
+                "You are the reason I believe in soulmates.",
+                "I love that our love story is my favorite one. (Better than Romeo and Juliet😤)",
+                "You are more than I ever dreamed of.",
+                "I love that I get to spend my life with you.",
+                "You are the beat to my heart.",
+                "You are my greatest blessing.",
+                "I love you more than words can say.",
+                "Because you are you."
+            ];
+
+            const themes = ['theme-pink', 'theme-red', 'theme-green', 'theme-black'];
+
+            function updateHeartColors() {
+                const hearts = document.querySelectorAll('.heart');
+                const computedStyle = getComputedStyle(body);
+                const color1 = computedStyle.getPropertyValue('--heart-color-1');
+                const color2 = computedStyle.getPropertyValue('--heart-color-2');
+                const heartColors = [color1, color2];
+
+                hearts.forEach(heart => {
+                    heart.style.backgroundColor = heartColors[Math.floor(Math.random() * heartColors.length)];
+                });
+            }
+
+            function setRandomTheme() {
+                const oldTheme = themes.find(t => body.classList.contains(t));
+                const availableThemes = themes.filter(t => t !== oldTheme);
+                const newTheme = availableThemes[Math.floor(Math.random() * availableThemes.length)];
+
+                if (oldTheme) body.classList.remove(oldTheme);
+                body.classList.add(newTheme);
+
+                updateHeartColors();
+            }
+
+            function initializeHearts() {
+                const computedStyle = getComputedStyle(body);
+                const color1 = computedStyle.getPropertyValue('--heart-color-1');
+                const color2 = computedStyle.getPropertyValue('--heart-color-2');
+                const heartColors = [color1, color2];
+
+                for (let i = 0; i < 20; i++) {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    
+                    const size = Math.random() * 30 + 10;
+                    heart.style.width = `${size}px`;
+                    heart.style.height = `${size}px`;
+                    heart.style.left = `${Math.random() * 100}vw`;
+                    
+                    const duration = Math.random() * 5 + 8;
+                    const delay = Math.random() * duration; 
+                    heart.style.animationDuration = `${duration}s`;
+                    heart.style.animationDelay = `-${delay}s`;
+                    
+                    heart.style.backgroundColor = heartColors[Math.floor(Math.random() * heartColors.length)];
+                    heartContainer.appendChild(heart);
+                }
+            }
+            
+            function resetProgress() {
+                revealedIndices.clear();
+                loveMessage.textContent = '';
+                loveMessage.classList.remove('visible');
+                counterEl.textContent = '';
+                jarText.textContent = 'Tap Me';
+            }
+
+            // --- Event Listeners ---
+            loveJar.addEventListener('click', () => {
+                if (revealedIndices.size >= reasons.length) {
+                    loveMessage.textContent = "You've uncovered all the reasons! My love for you is endless.";
+                    jarText.textContent = "Restart?";
+                    resetProgress();
+                    return;
+                }
+                
+                loveJar.classList.add('clicked');
+                setTimeout(() => loveJar.classList.remove('clicked'), 400);
+
+                setRandomTheme();
+
+                let newIndex;
+                if (currentMode === 'random') {
+                    do {
+                        newIndex = Math.floor(Math.random() * reasons.length);
+                    } while (revealedIndices.has(newIndex));
+                } else { // Ordered mode
+                    newIndex = revealedIndices.size;
+                }
+
+                revealedIndices.add(newIndex);
+
+                loveMessage.classList.remove('visible');
+                
+                setTimeout(() => {
+                    loveMessage.textContent = reasons[newIndex];
+                    loveMessage.classList.add('visible');
+                    jarText.textContent = "Again!";
+                    counterEl.textContent = `Reason ${revealedIndices.size} of ${reasons.length}`;
+                }, 400); 
+            });
+
+            modeSwitch.addEventListener('click', (e) => {
+                if (e.target.classList.contains('switch-option')) {
+                    const newMode = e.target.dataset.mode;
+                    if (newMode !== currentMode) {
+                        currentMode = newMode;
+                        document.querySelector('.switch-option.active').classList.remove('active');
+                        e.target.classList.add('active');
+                        resetProgress();
+                    }
+                }
+            });
+
+            // Initial setup
+            initializeHearts();
+        });
+    </script>
+</body>
+</html>
+
