@@ -29,47 +29,39 @@
         }
 
         .theme-pink {
-            --bg-start: #FFF1F2; /* Soft Pink */
+            --bg-start: #FFF1F2;
             --bg-end: #FFE4E6;
             --jar-color: #F472B6;
             --text-color: #831843;
-            --heart-color-1: rgba(251, 146, 175, 0.7);
-            --heart-color-2: rgba(253, 164, 175, 0.7);
         }
         
         .theme-red {
-            --bg-start: #991B1B; /* Dark Red */
+            --bg-start: #991B1B;
             --bg-end: #7F1D1D;
             --jar-color: #F87171;
             --text-color: #FECDD3;
-            --heart-color-1: rgba(254, 205, 211, 0.7);
-            --heart-color-2: rgba(252, 165, 165, 0.7);
         }
 
         .theme-green {
-            --bg-start: #166534; /* Dark Green */
+            --bg-start: #166534;
             --bg-end: #14532D;
             --jar-color: #34D399;
             --text-color: #D1FAE5;
-            --heart-color-1: rgba(167, 243, 208, 0.7);
-            --heart-color-2: rgba(110, 231, 183, 0.7);
         }
 
         .theme-black {
-            --bg-start: #374151; /* Midnight & Gold */
+            --bg-start: #374151;
             --bg-end: #1F2937;
             --jar-color: #FBBF24;
             --text-color: #FDE68A;
-            --heart-color-1: rgba(252, 211, 77, 0.7);
-            --heart-color-2: rgba(251, 191, 36, 0.7);
         }
 
         /* --- Animations --- */
         @keyframes float-up {
-            0% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
+            0% { transform: translateY(100vh); opacity: 0; }
             10% { opacity: 1; }
             90% { opacity: 1; }
-            100% { transform: translateY(-10vh) rotate(45deg); opacity: 0; }
+            100% { transform: translateY(-10vh); opacity: 0; }
         }
 
         @keyframes pop-in {
@@ -84,33 +76,13 @@
             75% { transform: rotate(3deg) scale(1.02); }
         }
 
-        /* --- Heart Shape CSS (Corrected) --- */
-        .heart {
+        /* --- Emoji Heart Styling --- */
+        .heart-emoji {
             position: absolute;
-            background-color: var(--heart-color-1);
-            transform: rotate(45deg);
             animation: float-up 10s infinite linear;
             opacity: 0;
-        }
-
-        .heart::before,
-        .heart::after {
-            content: '';
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-color: inherit;
-            border-radius: 50%;
-        }
-
-        .heart::before {
-            top: -50%;
-            left: 0;
-        }
-
-        .heart::after {
-            top: 0;
-            left: -50%;
+            user-select: none; /* Prevents emojis from being selectable */
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         /* --- Main Content --- */
@@ -281,7 +253,7 @@
             let currentMode = 'random'; // 'random' or 'ordered'
 
             const reasons = [
-                "I love you because you are funny.",
+               "I love you because you are funny.",
                 "I love you because you are beautiful.",
                 "I love you because you are gorgeous.",
                 "I love you because you are thoughtful.",
@@ -405,18 +377,13 @@
             ];
 
             const themes = ['theme-pink', 'theme-red', 'theme-green', 'theme-black'];
-
-            function updateHeartColors() {
-                const hearts = document.querySelectorAll('.heart');
-                const computedStyle = getComputedStyle(body);
-                const color1 = computedStyle.getPropertyValue('--heart-color-1');
-                const color2 = computedStyle.getPropertyValue('--heart-color-2');
-                const heartColors = [color1, color2];
-
-                hearts.forEach(heart => {
-                    heart.style.backgroundColor = heartColors[Math.floor(Math.random() * heartColors.length)];
-                });
-            }
+            
+            const themeEmojis = {
+                'theme-pink': ['💖', '💕', '💓'],
+                'theme-red': ['❤️', '❤'],
+                'theme-green': ['💚', '💚'],
+                'theme-black': ['💛', '🧡']
+            };
 
             function setRandomTheme() {
                 const oldTheme = themes.find(t => body.classList.contains(t));
@@ -426,22 +393,24 @@
                 if (oldTheme) body.classList.remove(oldTheme);
                 body.classList.add(newTheme);
 
-                updateHeartColors();
+                // Update the emojis to match the new theme
+                const newEmojis = themeEmojis[newTheme];
+                const hearts = document.querySelectorAll('.heart-emoji');
+                hearts.forEach(heart => {
+                    heart.textContent = newEmojis[Math.floor(Math.random() * newEmojis.length)];
+                });
             }
 
             function initializeHearts() {
-                const computedStyle = getComputedStyle(body);
-                const color1 = computedStyle.getPropertyValue('--heart-color-1');
-                const color2 = computedStyle.getPropertyValue('--heart-color-2');
-                const heartColors = [color1, color2];
+                const currentTheme = themes.find(t => body.classList.contains(t)) || 'theme-pink';
+                const emojiSet = themeEmojis[currentTheme];
 
                 for (let i = 0; i < 20; i++) {
                     const heart = document.createElement('div');
-                    heart.classList.add('heart');
+                    heart.classList.add('heart-emoji');
                     
-                    const size = Math.random() * 30 + 10;
-                    heart.style.width = `${size}px`;
-                    heart.style.height = `${size}px`;
+                    const size = Math.random() * 30 + 15; // Emojis look better a bit bigger
+                    heart.style.fontSize = `${size}px`;
                     heart.style.left = `${Math.random() * 100}vw`;
                     
                     const duration = Math.random() * 5 + 8;
@@ -449,7 +418,7 @@
                     heart.style.animationDuration = `${duration}s`;
                     heart.style.animationDelay = `-${delay}s`;
                     
-                    heart.style.backgroundColor = heartColors[Math.floor(Math.random() * heartColors.length)];
+                    heart.textContent = emojiSet[Math.floor(Math.random() * emojiSet.length)];
                     heartContainer.appendChild(heart);
                 }
             }
